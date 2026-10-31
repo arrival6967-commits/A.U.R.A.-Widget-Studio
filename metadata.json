@@ -1,0 +1,6 @@
+{
+  "name": "A.U.R.A. Widgets",
+  "description": "A.U.R.A. Widgets (Assembled United Room of Autists) — генератор кастомных Android-виджетов с ИИ в стилях Liquid Glass и Material 3 Expressive, адаптацией под обои, кастомными иконками и облачной синхронизацией.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,260 @@
+{
+  "entities": {
+    "WidgetDesign": {
+      "title": "WidgetDesign",
+      "description": "Custom AI-generated Android home screen widget configuration synced across user devices.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated owner UID matching request.auth.uid."
+        },
+        "title": {
+          "type": "string",
+          "description": "Widget title or header text (1-80 chars)."
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "Secondary subtitle or live metric label (0-120 chars)."
+        },
+        "primaryValue": {
+          "type": "string",
+          "description": "Main display value such as time, temperature, battery, or stat (1-60 chars)."
+        },
+        "secondaryValue": {
+          "type": "string",
+          "description": "Secondary badge or contextual info (0-80 chars)."
+        },
+        "prompt": {
+          "type": "string",
+          "description": "User prompt that generated this widget (1-500 chars)."
+        },
+        "stylePreset": {
+          "type": "string",
+          "enum": ["LIQUID_GLASS", "M3_EXPRESSIVE", "CYBER_NEON", "MINIMAL_FROST"],
+          "description": "Visual design system style preset."
+        },
+        "category": {
+          "type": "string",
+          "enum": ["WEATHER", "CLOCK", "FITNESS", "MUSIC", "BATTERY", "CALENDAR", "FINANCE", "NOTES", "CUSTOM"],
+          "description": "Functional widget category."
+        },
+        "sizePreset": {
+          "type": "string",
+          "enum": ["SMALL_2X2", "WIDE_4X2", "LARGE_4X4"],
+          "description": "Home screen grid dimensions."
+        },
+        "primaryColorHex": {
+          "type": "string",
+          "description": "Primary hex color (#RRGGBB)."
+        },
+        "secondaryColorHex": {
+          "type": "string",
+          "description": "Secondary accent hex color (#RRGGBB)."
+        },
+        "surfaceColorHex": {
+          "type": "string",
+          "description": "Surface tint hex color (#RRGGBB)."
+        },
+        "glassOpacity": {
+          "type": "number",
+          "description": "Element background opacity (0.05 to 1.0)."
+        },
+        "blurRadiusDp": {
+          "type": "number",
+          "description": "Backdrop glass blur intensity in dp (0.0 to 40.0)."
+        },
+        "specularIntensity": {
+          "type": "number",
+          "description": "Liquid glass rim reflection intensity (0.0 to 1.0)."
+        },
+        "cornerRadiusDp": {
+          "type": "number",
+          "description": "Outer shape corner radius in dp (8.0 to 48.0)."
+        },
+        "iconName": {
+          "type": "string",
+          "description": "Material icon identifier or 'CUSTOM' for imported user icon."
+        },
+        "customIconBase64": {
+          "type": "string",
+          "description": "Optional compressed Base64 data URI of an imported custom icon."
+        },
+        "dataSourceType": {
+          "type": "string",
+          "enum": [
+            "LIVE_CLOCK",
+            "GOOGLE_WEATHER",
+            "GOOGLE_KEEP",
+            "MICROSOFT_ONENOTE",
+            "SAMSUNG_NOTES",
+            "XIAOMI_NOTES",
+            "OPPO_NOTES",
+            "SYSTEM_BATTERY",
+            "MEDIA_SESSION",
+            "CALENDAR_EVENTS",
+            "STATIC_CUSTOM"
+          ],
+          "description": "External app or live system data provider feeding this widget."
+        },
+        "sourcePackageHint": {
+          "type": "string",
+          "description": "Target Android package or app name for data sync and optional tap action (0-120 chars)."
+        },
+        "tapBehavior": {
+          "type": "string",
+          "enum": ["NONE", "REFRESH_WIDGET", "OPEN_SOURCE_APP"],
+          "description": "Action on widget tap (never opens AuraWidget AI)."
+        },
+        "isAnimated": {
+          "type": "boolean",
+          "description": "Whether the widget runs live animations and real-time clock/ticking updates."
+        },
+        "animationStyle": {
+          "type": "string",
+          "enum": ["LIQUID_SHIMMER", "PULSE_GLOW", "TICKING_SWEEP", "ORBITAL_WAVE", "NONE"],
+          "description": "Visual animation style for both preview and home screen widget."
+        },
+        "fontFamily": {
+          "type": "string",
+          "enum": [
+            "GOOGLE_SANS",
+            "MONTSERRAT",
+            "PLAYFAIR_DISPLAY",
+            "JETBRAINS_MONO",
+            "COMFORTAA",
+            "RUBIK",
+            "SPACE_GROTESK",
+            "PLUS_JAKARTA"
+          ],
+          "description": "Custom font family used to render widget typography."
+        },
+        "showForecast3Day": {
+          "type": "boolean",
+          "description": "Whether to display expanded 3-day weather forecast on the widget."
+        },
+        "locationName": {
+          "type": "string",
+          "description": "Geographical location name or city for real weather (0-80 chars)."
+        },
+        "forecastJson": {
+          "type": "string",
+          "description": "Serialized 3-day forecast JSON data for real weather display (0-5000 chars)."
+        },
+        "autoDarkAdapt": {
+          "type": "boolean",
+          "description": "Whether widget automatically adapts contrast and tint for dark mode."
+        },
+        "isPinned": {
+          "type": "boolean",
+          "description": "Whether the widget is pinned to the active home screen preview and Android launcher."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of creation via FieldValue.serverTimestamp()."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update via FieldValue.serverTimestamp()."
+        }
+      },
+      "required": [
+        "userId",
+        "title",
+        "subtitle",
+        "primaryValue",
+        "secondaryValue",
+        "prompt",
+        "stylePreset",
+        "category",
+        "sizePreset",
+        "primaryColorHex",
+        "secondaryColorHex",
+        "surfaceColorHex",
+        "glassOpacity",
+        "blurRadiusDp",
+        "specularIntensity",
+        "cornerRadiusDp",
+        "iconName",
+        "autoDarkAdapt",
+        "isPinned",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UserWorkspace": {
+      "title": "UserWorkspace",
+      "description": "Cloud-synced user preferences, active wallpaper palette, and theme settings across devices.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated user UID."
+        },
+        "activeWallpaperPreset": {
+          "type": "string",
+          "enum": ["AURORA_BOREALIS", "SOLAR_FLARE", "CYBER_OBSIDIAN", "EMERALD_MIST", "CUSTOM_PHOTO"],
+          "description": "Selected wallpaper preset for color extraction and live preview."
+        },
+        "extractedPaletteHex": {
+          "type": "array",
+          "description": "List of up to 6 hex colors extracted from the user's wallpaper."
+        },
+        "darkThemeMode": {
+          "type": "string",
+          "enum": ["SYSTEM", "LIGHT", "DARK"],
+          "description": "App and widget dark mode behavior synced across devices."
+        },
+        "globalGlassOpacity": {
+          "type": "number",
+          "description": "Default transparency level for widgets (0.05 to 1.0)."
+        },
+        "globalBlurDp": {
+          "type": "number",
+          "description": "Default backdrop blur radius in dp (0.0 to 40.0)."
+        },
+        "syncDeviceName": {
+          "type": "string",
+          "description": "Name of the last Android device that synced settings."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation server timestamp via FieldValue.serverTimestamp()."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last sync server timestamp via FieldValue.serverTimestamp()."
+        }
+      },
+      "required": [
+        "userId",
+        "activeWallpaperPreset",
+        "extractedPaletteHex",
+        "darkThemeMode",
+        "globalGlassOpacity",
+        "globalBlurDp",
+        "syncDeviceName",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/widgets/{widgetId}": {
+      "schema": {
+        "$ref": "#/entities/WidgetDesign"
+      },
+      "description": "Per-user collection of AI-generated widgets and custom styling configurations."
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": {
+        "$ref": "#/entities/UserWorkspace"
+      },
+      "description": "Per-user cloud-synced workspace settings, wallpaper palette, and theme preferences."
+    }
+  }
+}

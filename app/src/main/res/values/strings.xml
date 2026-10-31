@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">A.U.R.A. Widgets</string>
+    <string name="widget_provider_description">AI-виджет в стиле Liquid Glass и Material 3 Expressive</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_badge">AI WIDGET STUDIO • LIQUID GLASS &amp; M3</string>
+    <string name="auth_title">Создавайте живые виджеты по запросу с ИИ</string>
+    <string name="auth_subtitle">Стили Apple Liquid Glass и Material 3 Expressive, интеграция с Google Погода, Keep, OneNote, Samsung/Xiaomi/Oppo Notes, живые часы и облачная синхронизация.</string>
+    <string name="action_sign_in_google">Войти через Google</string>
+    <string name="cd_google_sign_in">Вход через аккаунт Google</string>
+    <string name="auth_feature_glass">1:1 рендеринг Liquid Glass и Material 3 Expressive на главном экране</string>
+    <string name="auth_feature_palette">Данные из Google Погода, Keep, OneNote, системных заметок и живых часов</string>
+    <string name="auth_feature_sync">Отдельный чистый чат в стиле Gemini и облачная синхронизация</string>
+
+    <!-- Navigation -->
+    <string name="nav_gemini_chat">Gemini Чат</string>
+    <string name="nav_ai_studio">Конструктор</string>
+    <string name="nav_customizer">Палитра и Стекло</string>
+    <string name="nav_my_widgets">Коллекция</string>
+    <string name="nav_cloud_sync">Облако</string>
+
+    <!-- Gemini Chat Screen (Clean without suggestions) -->
+    <string name="gemini_chat_title">Gemini</string>
+    <string name="gemini_chat_empty_greeting">Какой виджет создадим?</string>
+    <string name="gemini_chat_input_placeholder">Спросите Gemini или опишите виджет…</string>
+    <string name="gemini_chat_apply_widget">Открыть в конструкторе</string>
+    <string name="gemini_chat_pin_widget">На главный экран</string>
+    <string name="gemini_chat_clear">Очистить диалог</string>
+
+    <!-- AI Studio Screen -->
+    <string name="studio_header_title">Конструктор и Источники данных</string>
+    <string name="studio_header_subtitle">Настройте источник данных (Погода, Keep, OneNote, Живые часы), анимацию и стиль</string>
+    <string name="prompt_label">Быстрое перестроение через Gemini</string>
+    <string name="prompt_placeholder">Опишите изменения дизайна или источника данных…</string>
+    <string name="action_generate_ai">Обновить виджет через ИИ</string>
+    <string name="action_generating">Gemini проектирует виджет…</string>
+    <string name="action_save_cloud">Сохранить в облако</string>
+    <string name="action_pin_home">Закрепить 1:1 виджет на экране</string>
+    <string name="style_preset_section">Стиль дизайна</string>
+    <string name="data_source_section">Источник данных приложения</string>
+    <string name="animation_section">Анимация и поведение при нажатии</string>
+
+    <!-- Customizer Screen -->
+    <string name="customizer_title">Адаптация под обои и Стекло</string>
+    <string name="customizer_subtitle">Мгновенная настройка прозрачности, размытия, палитры обоев и кастомных иконок</string>
+    <string name="wallpaper_section_title">Обои и авто-извлечение палитры</string>
+    <string name="action_pick_wallpaper">Загрузить свои обои</string>
+    <string name="action_apply_wallpaper_palette">Применить палитру обоев к виджету</string>
+    <string name="slider_opacity_label">Прозрачность стекла (Opacity)</string>
+    <string name="slider_blur_label">Глубина размытия (Backdrop Blur)</string>
+    <string name="slider_specular_label">Блик преломления (Liquid Specular)</string>
+    <string name="slider_corner_label">Скругление углов (Expressive Shape)</string>
+    <string name="custom_icon_section_title">Иконка виджета</string>
+    <string name="action_import_custom_icon">Импортировать свою иконку</string>
+    <string name="action_reset_custom_icon">Сбросить кастомную иконку</string>
+    <string name="auto_dark_adapt_label">Авто-адаптация контраста под темную тему</string>
+
+    <!-- Collection Screen -->
+    <string name="collection_title">Мои облачные виджеты</string>
+    <string name="collection_subtitle">Все сохраненные виджеты синхронизируются между вашими Android-устройствами</string>
+    <string name="empty_widgets_title">Коллекция пока пуста</string>
+    <string name="empty_widgets_subtitle">Создайте свой первый виджет в чате Gemini или загрузите витрину с живыми источниками</string>
+    <string name="action_seed_presets">Загрузить витрину (Погода, Часы, Заметки)</string>
+    <string name="action_edit_widget">Настроить</string>
+    <string name="action_delete_widget">Удалить</string>
+
+    <!-- Cloud & Theme Screen -->
+    <string name="cloud_title">Облачная синхронизация и Тема</string>
+    <string name="cloud_subtitle">Мгновенная синхронизация палитры, прозрачности и режима темной темы</string>
+    <string name="theme_mode_section">Режим темы приложения и виджетов</string>
+    <string name="cloud_status_active">Облако Firestore активно • Синхронизация в реальном времени</string>
+    <string name="action_sync_now">Синхронизировать настройки сейчас</string>
+    <string name="action_sign_out">Выйти из аккаунта</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_widget_preview">Интерактивное превью виджета на обоях</string>
+    <string name="cd_custom_icon">Кастомная иконка виджета</string>
+    <string name="cd_wallpaper_swatch">Цветовой акцент палитры обоев</string>
+</resources>

@@ -1,0 +1,165 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Hardened Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidHexColor(color) {
+      return color is string && color.size() >= 4 && color.size() <= 9 && color.matches('^#[0-9A-Fa-f]{3,8}$');
+    }
+
+    // 3. Entity Validation Blueprints
+    function isValidWidgetDesign(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 80 &&
+             data.subtitle is string && data.subtitle.size() <= 120 &&
+             data.primaryValue is string && data.primaryValue.size() >= 1 && data.primaryValue.size() <= 60 &&
+             data.secondaryValue is string && data.secondaryValue.size() <= 80 &&
+             data.prompt is string && data.prompt.size() >= 1 && data.prompt.size() <= 500 &&
+             data.stylePreset in ['LIQUID_GLASS', 'M3_EXPRESSIVE', 'CYBER_NEON', 'MINIMAL_FROST'] &&
+             data.category in ['WEATHER', 'CLOCK', 'FITNESS', 'MUSIC', 'BATTERY', 'CALENDAR', 'FINANCE', 'NOTES', 'CUSTOM'] &&
+             data.sizePreset in ['SMALL_2X2', 'WIDE_4X2', 'LARGE_4X4'] &&
+             isValidHexColor(data.primaryColorHex) &&
+             isValidHexColor(data.secondaryColorHex) &&
+             isValidHexColor(data.surfaceColorHex) &&
+             data.glassOpacity is number && data.glassOpacity >= 0.05 && data.glassOpacity <= 1.0 &&
+             data.blurRadiusDp is number && data.blurRadiusDp >= 0.0 && data.blurRadiusDp <= 40.0 &&
+             data.specularIntensity is number && data.specularIntensity >= 0.0 && data.specularIntensity <= 1.0 &&
+             data.cornerRadiusDp is number && data.cornerRadiusDp >= 8.0 && data.cornerRadiusDp <= 48.0 &&
+             data.iconName is string && data.iconName.size() >= 1 && data.iconName.size() <= 60 &&
+             (!('customIconBase64' in data) || data.customIconBase64 == null || (data.customIconBase64 is string && data.customIconBase64.size() <= 150000)) &&
+             (!('dataSourceType' in data) || data.dataSourceType in ['LIVE_CLOCK', 'GOOGLE_WEATHER', 'GOOGLE_KEEP', 'MICROSOFT_ONENOTE', 'SAMSUNG_NOTES', 'XIAOMI_NOTES', 'OPPO_NOTES', 'SYSTEM_BATTERY', 'MEDIA_SESSION', 'CALENDAR_EVENTS', 'STATIC_CUSTOM']) &&
+             (!('sourcePackageHint' in data) || (data.sourcePackageHint is string && data.sourcePackageHint.size() <= 120)) &&
+             (!('tapBehavior' in data) || data.tapBehavior in ['NONE', 'REFRESH_WIDGET', 'OPEN_SOURCE_APP']) &&
+             (!('isAnimated' in data) || data.isAnimated is bool) &&
+             (!('animationStyle' in data) || data.animationStyle in ['LIQUID_SHIMMER', 'PULSE_GLOW', 'TICKING_SWEEP', 'ORBITAL_WAVE', 'NONE']) &&
+             (!('fontFamily' in data) || data.fontFamily in ['GOOGLE_SANS', 'MONTSERRAT', 'PLAYFAIR_DISPLAY', 'JETBRAINS_MONO', 'COMFORTAA', 'RUBIK', 'SPACE_GROTESK', 'PLUS_JAKARTA']) &&
+             (!('showForecast3Day' in data) || data.showForecast3Day is bool) &&
+             (!('locationName' in data) || (data.locationName is string && data.locationName.size() <= 80)) &&
+             (!('forecastJson' in data) || data.forecastJson == null || (data.forecastJson is string && data.forecastJson.size() <= 5000)) &&
+             data.autoDarkAdapt is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time &&
+             data.isPinned is bool;
+    }
+
+    function isValidUserWorkspace(data) {
+      return data.userId is string && data.userId == request.auth.uid &&
+             data.activeWallpaperPreset in ['AURORA_BOREALIS', 'SOLAR_FLARE', 'CYBER_OBSIDIAN', 'EMERALD_MIST', 'CUSTOM_PHOTO'] &&
+             data.extractedPaletteHex is list && data.extractedPaletteHex.size() >= 1 && data.extractedPaletteHex.size() <= 8 &&
+             data.extractedPaletteHex[0] is string && data.extractedPaletteHex[0].size() <= 9 &&
+             data.darkThemeMode in ['SYSTEM', 'LIGHT', 'DARK'] &&
+             data.globalGlassOpacity is number && data.globalGlassOpacity >= 0.05 && data.globalGlassOpacity <= 1.0 &&
+             data.globalBlurDp is number && data.globalBlurDp >= 0.0 && data.globalBlurDp <= 40.0 &&
+             data.syncDeviceName is string && data.syncDeviceName.size() >= 1 && data.syncDeviceName.size() <= 80 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    // 4. Collection Rules: User Widgets
+    match /users/{userId}/widgets/{widgetId} {
+      allow get: if isOwner(userId) && isValidId(userId) && isValidId(widgetId);
+      allow list: if isOwner(userId) && existing().userId == request.auth.uid;
+
+      allow create: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidId(widgetId) &&
+                       incoming().keys().hasAll([
+                         'userId', 'title', 'subtitle', 'primaryValue', 'secondaryValue',
+                         'prompt', 'stylePreset', 'category', 'sizePreset',
+                         'primaryColorHex', 'secondaryColorHex', 'surfaceColorHex',
+                         'glassOpacity', 'blurRadiusDp', 'specularIntensity', 'cornerRadiusDp',
+                         'iconName', 'autoDarkAdapt', 'isPinned', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'title', 'subtitle', 'primaryValue', 'secondaryValue',
+                         'prompt', 'stylePreset', 'category', 'sizePreset',
+                         'primaryColorHex', 'secondaryColorHex', 'surfaceColorHex',
+                         'glassOpacity', 'blurRadiusDp', 'specularIntensity', 'cornerRadiusDp',
+                         'iconName', 'customIconBase64', 'dataSourceType', 'sourcePackageHint',
+                         'tapBehavior', 'isAnimated', 'animationStyle', 'fontFamily',
+                         'showForecast3Day', 'locationName', 'forecastJson',
+                         'autoDarkAdapt', 'isPinned', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidWidgetDesign(incoming());
+
+      allow update: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidId(widgetId) &&
+                       isValidWidgetDesign(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'title', 'subtitle', 'primaryValue', 'secondaryValue',
+                         'prompt', 'stylePreset', 'category', 'sizePreset',
+                         'primaryColorHex', 'secondaryColorHex', 'surfaceColorHex',
+                         'glassOpacity', 'blurRadiusDp', 'specularIntensity', 'cornerRadiusDp',
+                         'iconName', 'customIconBase64', 'dataSourceType', 'sourcePackageHint',
+                         'tapBehavior', 'isAnimated', 'animationStyle', 'fontFamily',
+                         'showForecast3Day', 'locationName', 'forecastJson',
+                         'autoDarkAdapt', 'isPinned', 'updatedAt'
+                       ]);
+
+      allow delete: if isOwner(userId) && isValidId(userId) && isValidId(widgetId);
+    }
+
+    // 5. Collection Rules: User Cloud Workspace Settings
+    match /users/{userId}/settings/{settingId} {
+      allow get: if isOwner(userId) && isValidId(userId) && isValidId(settingId);
+      allow list: if isOwner(userId) && existing().userId == request.auth.uid;
+
+      allow create: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidId(settingId) &&
+                       incoming().keys().hasAll([
+                         'userId', 'activeWallpaperPreset', 'extractedPaletteHex',
+                         'darkThemeMode', 'globalGlassOpacity', 'globalBlurDp',
+                         'syncDeviceName', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'activeWallpaperPreset', 'extractedPaletteHex',
+                         'darkThemeMode', 'globalGlassOpacity', 'globalBlurDp',
+                         'syncDeviceName', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidUserWorkspace(incoming());
+
+      allow update: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidId(settingId) &&
+                       isValidUserWorkspace(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'activeWallpaperPreset', 'extractedPaletteHex',
+                         'darkThemeMode', 'globalGlassOpacity', 'globalBlurDp',
+                         'syncDeviceName', 'updatedAt'
+                       ]);
+
+      allow delete: if isOwner(userId) && isValidId(userId) && isValidId(settingId);
+    }
+  }
+}

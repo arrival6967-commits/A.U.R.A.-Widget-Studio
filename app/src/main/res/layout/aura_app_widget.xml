@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp">
+
+    <!-- 1:1 High-DPI Canvas-rendered glass background and graphics (centerCrop prevents squashing/stretching) -->
+    <ImageView
+        android:id="@+id/widget_canvas_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/cd_widget_preview"
+        android:scaleType="centerCrop" />
+
+    <!-- Live Clock / Stopwatch / Timer Overlay (OS-native ticking & exact preview fonts) -->
+    <RelativeLayout
+        android:id="@+id/widget_clock_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="0dp"
+        android:visibility="gone">
+
+        <!-- DIGITAL HM (Hours & Minutes) - Exact Font variants matching preview without textStyle=bold to avoid Roboto fallback -->
+        <TextClock
+            android:id="@+id/widget_text_clock_hm_google_sans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/google_sans"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="54sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hm_montserrat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/montserrat"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="50sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hm_playfair"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/playfair_display"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="52sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hm_jetbrains"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/jetbrains_mono"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hm_comfortaa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/comfortaa"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hm_rubik"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/rubik"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="52sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hm_space_grotesk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/space_grotesk"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="50sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hm_plus_jakarta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="50sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <!-- DIGITAL HMS (Hours, Minutes, Seconds) - Font variants matching preview -->
+        <TextClock
+            android:id="@+id/widget_text_clock_hms_google_sans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/google_sans"
+            android:format12Hour="hh:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#FFFFFF"
+            android:textSize="44sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hms_montserrat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/montserrat"
+            android:format12Hour="hh:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#FFFFFF"
+            android:textSize="42sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hms_playfair"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/playfair_display"
+            android:format12Hour="hh:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#FFFFFF"
+            android:textSize="44sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hms_jetbrains"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/jetbrains_mono"
+            android:format12Hour="hh:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hms_comfortaa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/comfortaa"
+            android:format12Hour="hh:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hms_rubik"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/rubik"
+            android:format12Hour="hh:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#FFFFFF"
+            android:textSize="42sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hms_space_grotesk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/space_grotesk"
+            android:format12Hour="hh:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#FFFFFF"
+            android:textSize="42sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <TextClock
+            android:id="@+id/widget_text_clock_hms_plus_jakarta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:format12Hour="hh:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#FFFFFF"
+            android:textSize="42sp"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="10"
+            android:visibility="gone" />
+
+        <!-- Stopwatch & Countdown Timer with Live Chronometer & Controls -->
+        <LinearLayout
+            android:id="@+id/widget_chronometer_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Font variants of Chronometer -->
+            <Chronometer
+                android:id="@+id/widget_chronometer_google_sans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp"
+                android:shadowColor="#D0000000"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="10"
+                android:visibility="gone" />
+
+            <Chronometer
+                android:id="@+id/widget_chronometer_montserrat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat"
+                android:textColor="#FFFFFF"
+                android:textSize="38sp"
+                android:shadowColor="#D0000000"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="10"
+                android:visibility="gone" />
+
+            <Chronometer
+                android:id="@+id/widget_chronometer_jetbrains"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/jetbrains_mono"
+                android:textColor="#FFFFFF"
+                android:textSize="36sp"
+                android:shadowColor="#D0000000"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="10"
+                android:visibility="gone" />
+
+            <Chronometer
+                android:id="@+id/widget_chronometer_generic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp"
+                android:shadowColor="#D0000000"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="10"
+                android:visibility="gone" />
+
+            <!-- Interactive buttons row -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/widget_btn_toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/widget_btn_bg"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="6dp"
+                    android:text="Старт"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/google_sans"
+                    android:shadowColor="#D0000000"
+                    android:shadowDx="0"
+                    android:shadowDy="2"
+                    android:shadowRadius="4" />
+
+                <TextView
+                    android:id="@+id/widget_btn_reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/widget_btn_bg"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="6dp"
+                    android:text="Сброс"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/google_sans"
+                    android:shadowColor="#D0000000"
+                    android:shadowDx="0"
+                    android:shadowDy="2"
+                    android:shadowRadius="4" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>
