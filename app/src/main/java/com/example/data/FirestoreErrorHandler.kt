@@ -18,29 +18,22 @@ fun handleFirestoreError(exception: Exception, operationType: OperationType, pat
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
 
-    val providerInfoList = currentUser?.providerData?.map { provider ->
-        JSONObject().apply {
-            put("providerId", provider.providerId)
-            put("email", provider.email)
-        }
-    } ?: emptyList()
-
+    // Sanitize diagnostic info: never leak email addresses, UIDs, or tenant IDs into logs
     val authInfoJson = JSONObject().apply {
-        put("userId", currentUser?.uid)
-        put("email", currentUser?.email)
-        put("emailVerified", currentUser?.isEmailVerified)
-        put("tenantId", currentUser?.tenantId)
-        put("providerInfo", JSONArray(providerInfoList))
+        put("isAuthenticated", currentUser != null)
+        put("authProvider", currentUser?.providerData?.firstOrNull()?.providerId ?: "none")
+        put("isEmailVerified", currentUser?.isEmailVerified ?: false)
     }
 
     val errorInfoJson = JSONObject().apply {
-        put("error", exception.message ?: exception.toString())
+        put("errorType", exception.javaClass.simpleName)
+        put("message", exception.localizedMessage ?: exception.message ?: "Unknown Firestore error")
         put("operationType", operationType.value)
         put("path", path)
-        put("authInfo", authInfoJson)
+        put("authStatus", authInfoJson)
     }
 
     val jsonString = errorInfoJson.toString()
-    Log.e("FirestoreError", "Firestore Error: $jsonString")
+    Log.e("FirestoreError", "Firestore error: $jsonString")
     return jsonString
 }

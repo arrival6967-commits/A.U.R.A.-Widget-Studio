@@ -79,88 +79,8 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         val manager = AppWidgetManager.getInstance(context)
-        val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
         when (intent.action) {
-            ACTION_STOPWATCH_TOGGLE -> {
-                if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    val prefs = context.getSharedPreferences(getWidgetPrefsName(appWidgetId), Context.MODE_PRIVATE)
-                    val isRunning = prefs.getBoolean("stopwatch_running", false)
-                    val accumulated = prefs.getLong("stopwatch_accumulated_ms", 0L)
-                    val now = SystemClock.elapsedRealtime()
-
-                    if (isRunning) {
-                        val base = prefs.getLong("stopwatch_base", now)
-                        val elapsed = (now - base).coerceAtLeast(0L)
-                        prefs.edit()
-                            .putBoolean("stopwatch_running", false)
-                            .putLong("stopwatch_accumulated_ms", elapsed)
-                            .commit()
-                    } else {
-                        val newBase = now - accumulated
-                        prefs.edit()
-                            .putBoolean("stopwatch_running", true)
-                            .putLong("stopwatch_base", newBase)
-                            .commit()
-                    }
-                    updateAppWidget(context, manager, appWidgetId)
-                }
-            }
-
-            ACTION_STOPWATCH_RESET -> {
-                if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    val prefs = context.getSharedPreferences(getWidgetPrefsName(appWidgetId), Context.MODE_PRIVATE)
-                    prefs.edit()
-                        .putBoolean("stopwatch_running", false)
-                        .putLong("stopwatch_accumulated_ms", 0L)
-                        .putLong("stopwatch_base", SystemClock.elapsedRealtime())
-                        .commit()
-                    updateAppWidget(context, manager, appWidgetId)
-                }
-            }
-
-            ACTION_TIMER_TOGGLE -> {
-                if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    val prefs = context.getSharedPreferences(getWidgetPrefsName(appWidgetId), Context.MODE_PRIVATE)
-                    val isRunning = prefs.getBoolean("timer_running", false)
-                    val duration = prefs.getLong("timer_duration_ms", 300_000L) // Default 5 mins
-                    val remaining = prefs.getLong("timer_remaining_ms", duration)
-                    val now = SystemClock.elapsedRealtime()
-
-                    if (isRunning) {
-                        val target = prefs.getLong("timer_target", now + remaining)
-                        val rem = (target - now).coerceAtLeast(0L)
-                        prefs.edit()
-                            .putBoolean("timer_running", false)
-                            .putLong("timer_remaining_ms", rem)
-                            .commit()
-                    } else {
-                        val activeRem = if (remaining <= 0L) duration else remaining
-                        val target = now + activeRem
-                        prefs.edit()
-                            .putBoolean("timer_running", true)
-                            .putLong("timer_target", target)
-                            .putLong("timer_remaining_ms", activeRem)
-                            .commit()
-                    }
-                    updateAppWidget(context, manager, appWidgetId)
-                }
-            }
-
-            ACTION_TIMER_RESET -> {
-                if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    val prefs = context.getSharedPreferences(getWidgetPrefsName(appWidgetId), Context.MODE_PRIVATE)
-                    val duration = prefs.getLong("timer_duration_ms", 300_000L)
-                    prefs.edit()
-                        .putBoolean("timer_running", false)
-                        .putLong("timer_remaining_ms", duration)
-                        .putLong("timer_target", SystemClock.elapsedRealtime() + duration)
-                        .commit()
-                    updateAppWidget(context, manager, appWidgetId)
-                }
-            }
-
-            ACTION_MINUTE_TICK,
             Intent.ACTION_TIME_TICK,
             Intent.ACTION_TIME_CHANGED,
             Intent.ACTION_TIMEZONE_CHANGED,
@@ -173,32 +93,6 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
                 }
                 scheduleNextMinuteAlarm(context)
             }
-
-            ACTION_WIDGET_TAP_INTERACTION -> {
-                if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    val prefs = context.getSharedPreferences(getWidgetPrefsName(appWidgetId), Context.MODE_PRIVATE)
-                    val currentPhase = prefs.getFloat("animPhase", 0.25f)
-                    val nextPhase = (currentPhase + 0.22f) % 1.0f
-                    prefs.edit().putFloat("animPhase", nextPhase).commit()
-
-                    val widget = loadWidgetForAppWidgetId(context, appWidgetId)
-                    val tapBehavior = WidgetTapBehavior.fromString(widget.tapBehavior)
-
-                    // Refresh ONLY this specific widget
-                    updateAppWidget(context, manager, appWidgetId)
-
-                    // If configured to open external app, launch ONLY that app
-                    if (tapBehavior == WidgetTapBehavior.OPEN_SOURCE_APP) {
-                        val externalIntent = AppDataSourceManager.buildSourceAppLaunchIntent(context, widget)
-                        if (externalIntent != null && externalIntent.component?.packageName != context.packageName) {
-                            try {
-                                context.startActivity(externalIntent)
-                            } catch (ignored: Exception) {
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -210,6 +104,7 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
         const val ACTION_STOPWATCH_RESET = "com.example.widget.ACTION_STOPWATCH_RESET"
         const val ACTION_TIMER_TOGGLE = "com.example.widget.ACTION_TIMER_TOGGLE"
         const val ACTION_TIMER_RESET = "com.example.widget.ACTION_TIMER_RESET"
+        const val ACTION_NOOP = "com.example.widget.ACTION_NOOP"
 
         fun scheduleNextMinuteAlarm(context: Context) {
             try {
@@ -217,8 +112,9 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
                 val now = System.currentTimeMillis()
                 val nextMinute = (now / 60000L + 1L) * 60000L + 200L
 
-                val intent = Intent(context, AuraAppWidgetProvider::class.java).apply {
+                val intent = Intent(context, AuraWidgetInternalReceiver::class.java).apply {
                     action = ACTION_MINUTE_TICK
+                    setPackage(context.packageName)
                 }
                 val pi = PendingIntent.getBroadcast(
                     context,
@@ -581,9 +477,10 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
                         views.setTextViewText(R.id.widget_btn_toggle, if (isRunning) "Пауза" else "Старт")
 
                         // Bind stopwatch interactive intents
-                        val toggleIntent = Intent(context, AuraAppWidgetProvider::class.java).apply {
+                        val toggleIntent = Intent(context, AuraWidgetInternalReceiver::class.java).apply {
                             action = ACTION_STOPWATCH_TOGGLE
                             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                            setPackage(context.packageName)
                         }
                         val pendingToggle = PendingIntent.getBroadcast(
                             context,
@@ -593,9 +490,10 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
                         )
                         views.setOnClickPendingIntent(R.id.widget_btn_toggle, pendingToggle)
 
-                        val resetIntent = Intent(context, AuraAppWidgetProvider::class.java).apply {
+                        val resetIntent = Intent(context, AuraWidgetInternalReceiver::class.java).apply {
                             action = ACTION_STOPWATCH_RESET
                             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                            setPackage(context.packageName)
                         }
                         val pendingReset = PendingIntent.getBroadcast(
                             context,
@@ -628,9 +526,10 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
                         views.setTextViewText(R.id.widget_btn_toggle, if (isRunning) "Пауза" else "Старт")
 
                         // Bind timer interactive intents
-                        val toggleIntent = Intent(context, AuraAppWidgetProvider::class.java).apply {
+                        val toggleIntent = Intent(context, AuraWidgetInternalReceiver::class.java).apply {
                             action = ACTION_TIMER_TOGGLE
                             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                            setPackage(context.packageName)
                         }
                         val pendingToggle = PendingIntent.getBroadcast(
                             context,
@@ -640,9 +539,10 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
                         )
                         views.setOnClickPendingIntent(R.id.widget_btn_toggle, pendingToggle)
 
-                        val resetIntent = Intent(context, AuraAppWidgetProvider::class.java).apply {
+                        val resetIntent = Intent(context, AuraWidgetInternalReceiver::class.java).apply {
                             action = ACTION_TIMER_RESET
                             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                            setPackage(context.packageName)
                         }
                         val pendingReset = PendingIntent.getBroadcast(
                             context,
@@ -659,12 +559,13 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.widget_clock_container, View.GONE)
             }
 
-            // Tap handling: NEVER opens AuraWidget AI
+            // Tap handling: NEVER opens A.U.R.A. Widgets
             val tapBehavior = WidgetTapBehavior.fromString(widget.tapBehavior)
             if (tapBehavior == WidgetTapBehavior.NONE) {
-                val noopIntent = Intent(context, AuraAppWidgetProvider::class.java).apply {
-                    action = "com.example.widget.ACTION_NOOP"
+                val noopIntent = Intent(context, AuraWidgetInternalReceiver::class.java).apply {
+                    action = ACTION_NOOP
                     putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                    setPackage(context.packageName)
                 }
                 val pendingNoop = PendingIntent.getBroadcast(
                     context,
@@ -674,9 +575,10 @@ class AuraAppWidgetProvider : AppWidgetProvider() {
                 )
                 views.setOnClickPendingIntent(R.id.widget_root, pendingNoop)
             } else {
-                val broadcastIntent = Intent(context, AuraAppWidgetProvider::class.java).apply {
+                val broadcastIntent = Intent(context, AuraWidgetInternalReceiver::class.java).apply {
                     action = ACTION_WIDGET_TAP_INTERACTION
                     putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                    setPackage(context.packageName)
                 }
                 val pendingBroadcast = PendingIntent.getBroadcast(
                     context,

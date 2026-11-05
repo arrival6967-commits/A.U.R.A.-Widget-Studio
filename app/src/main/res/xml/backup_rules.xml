@@ -6,8 +6,8 @@
    See https://developer.android.com/about/versions/12/backup-restore
 -->
 <full-backup-content>
-    <!--
-   <include domain="sharedpref" path="."/>
-   <exclude domain="sharedpref" path="device.xml"/>
--->
+    <!-- Exclude local device-specific widget configs, pending drafts, and cache from cloud backup -->
+    <exclude domain="sharedpref" path="aura_pending_widget_prefs.xml" />
+    <exclude domain="sharedpref" path="com.google.android.gms.appid.xml" />
+    <exclude domain="root" path="aura_widget_config_.*" />
 </full-backup-content>
